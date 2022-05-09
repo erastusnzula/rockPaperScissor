@@ -1,39 +1,42 @@
-import java.util.*
-
-fun main(args: Array<String>){
-    val options = arrayOf("Rock", "Paper", "Scissor")
-    val gameChoice = getGameChoice(options)
-    val userChoice = getUserGameChoice(options)
-    printResults(userChoice, gameChoice)
-
+fun main(args: Array<String>) {
+    val choices = arrayOf("Paper", "Rock", "Scissor")
+    val gameChoice = getGameChoice(choices)
+    val userInputChoice = getUserInputChoice(choices)
+    showResults(userInputChoice, gameChoice)
 }
 
-fun getGameChoice(optionsParam: Array<String>): String {
-    return optionsParam[(Math.random() * optionsParam.size).toInt()]
+
+fun getGameChoice(choices: Array<String>): String {
+    val randomIndex = (Math.random() * choices.size).toInt()
+    return choices[randomIndex]
 }
 
-fun getUserGameChoice(optionsParam: Array<String>): String {
-    var isValidChoice = false
-    var userChoice = ""
-    while (!isValidChoice){
-        println("Please enter one of the following: ")
-        for (item in optionsParam) print(" $item")
-        println(".")
-        val userInput = readLine()
-        if (userInput != null && userInput.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } in optionsParam ){
-            isValidChoice = true
-            userChoice = userInput
+fun getUserInputChoice(choices: Array<String>): String {
+    var choice = ""
+    var valid = false
+
+    while (!valid) {
+        println("Please enter one of the following choices: ")
+        for ((i, item) in choices.withIndex()) {
+            println(" $i : $item")
         }
-        if (!isValidChoice) println("You must enter a valid choice")
+        val userInput = readLine()
+        if (userInput != null && userInput in choices) {
+            valid = true
+            choice = userInput
+        } else {
+            println("Enter a valid choice")
+        }
     }
-    return userChoice
+    return choice
 }
 
-fun printResults(userChoice:String, gameChoice:String){
-    val result : String = if (userChoice.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } == gameChoice) "Tie"
-    else if ((userChoice.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } =="Rock" && gameChoice=="Scissor") ||
-        (userChoice.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } == "Scissor" && gameChoice == "Paper")||
-        (userChoice.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } == "Paper" && gameChoice == "Rock")) "You win"
+fun showResults(userInput: String, gameChoice: String) {
+    val results: String = if (userInput == gameChoice) "Tie"
+    else if ((userInput == "Paper" && gameChoice == "Rock") ||
+        (userInput == "Scissor" && gameChoice == "Paper") ||
+        (userInput == "Rock" && gameChoice == "Scissor")
+    ) "You win"
     else "You lose"
-    println("You chose ${userChoice.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}, I chose $gameChoice. $result")
+    println("Your choice $userInput, I chose $gameChoice. $results")
 }
